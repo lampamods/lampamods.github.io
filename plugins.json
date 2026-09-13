@@ -1,7 +1,6 @@
 {
   "title": "Lampa Mods",
   "repository": "https://github.com/lampamods/lampamods.github.io",
-  "baseUrl": "https://lampamods.github.io/",
   "plugins": [
     {
       "name": "FastView",

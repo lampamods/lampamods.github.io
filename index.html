@@ -385,8 +385,8 @@
       }
     }
 
-    function renderPlugin(plugin, baseUrl) {
-      var url = plugin.url || new URL(plugin.file, baseUrl).href;
+    function renderPlugin(plugin) {
+      var url = new URL(plugin.file || plugin.url, window.location.href).href;
       var card = document.createElement('article');
       card.className = 'plugin';
 
@@ -458,7 +458,7 @@
         document.getElementById('title').textContent = catalog.title;
         document.getElementById('repository').href = catalog.repository;
         catalog.plugins.forEach(function (plugin) {
-          renderPlugin(plugin, catalog.baseUrl);
+          renderPlugin(plugin);
         });
         statusElement.hidden = true;
       })

@@ -1,0 +1,12 @@
+{
+  "title": "Lampa Mods",
+  "repository": "https://github.com/lampamods/lampamods.github.io",
+  "baseUrl": "https://lampamods.github.io/",
+  "plugins": [
+    {
+      "name": "FastView",
+      "file": "FastView.js",
+      "description": "Сразу открывает выбранный источник при нажатии на карточку"
+    }
+  ]
+}

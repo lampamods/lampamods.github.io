@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="assets/favicon/site.webmanifest" />
+  <title>Lampa Mods</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --background: #101114;
+      --surface: #191b20;
+      --surface-hover: #20232a;
+      --text: #f6f7f9;
+      --muted: #9ca3af;
+      --accent: #f3c94f;
+      --accent-text: #17130a;
+      --border: rgba(255, 255, 255, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(243, 201, 79, 0.12), transparent 30rem),
+        var(--background);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 0.2em;
+      margin: 0;
+      font-size: clamp(36px, 8vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .title-logo {
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+
+    .github-link {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .github-link:hover {
+      background: var(--surface);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .plugins {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+      gap: 16px;
+    }
+
+    .plugin {
+      position: relative;
+      display: flex;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      flex-direction: column;
+      transition: background 0.2s ease;
+    }
+
+    .plugin:hover {
+      background: var(--surface-hover);
+    }
+
+    .plugin:hover,
+    .plugin:focus-within {
+      z-index: 1;
+    }
+
+    .plugin h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .plugin p {
+      margin: 10px 0 16px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .actions {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    button,
+    .code-link {
+      min-height: 42px;
+      padding: 0 15px;
+      border-radius: 11px;
+      font: inherit;
+      font-weight: 650;
+    }
+
+    button {
+      border: 0;
+      background: var(--accent);
+      color: var(--accent-text);
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(1.07);
+    }
+
+    .copy-button,
+    .button-content {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .copy-button {
+      position: relative;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .copy-button svg,
+    .code-link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .copy-button .check-icon {
+      display: none;
+      position: absolute;
+    }
+
+    .copy-button.is-copied .button-content {
+      visibility: hidden;
+    }
+
+    .copy-button.is-copied .check-icon {
+      display: block;
+    }
+
+    .lampac-action {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .lampac-button {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+    }
+
+    .lampac-tooltip {
+      --tooltip-background: #343944;
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      transform: translateX(-50%);
+      width: min(240px, calc(100vw - 128px));
+      max-width: calc(100vw - 48px);
+      padding-bottom: 10px;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.15s ease 0.2s, visibility 0s linear 0.35s;
+    }
+
+    .lampac-tooltip::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 5px;
+      width: 10px;
+      height: 10px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--tooltip-background);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .lampac-tooltip-content {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--tooltip-background);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .lampac-tooltip a {
+      color: var(--accent);
+    }
+
+    .lampac-action:hover .lampac-tooltip,
+    .lampac-button:focus-visible + .lampac-tooltip,
+    .lampac-tooltip:focus-within {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0s;
+    }
+
+    .lampac-action.tooltip-dismissed .lampac-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      transition: none;
+    }
+
+    .code-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .status {
+      margin: 20px 0 0;
+      color: var(--muted);
+    }
+
+    .error {
+      color: #ff8d8d;
+    }
+
+    @media (max-width: 650px) {
+      .page {
+        padding-top: 34px;
+      }
+
+      .header {
+        flex-direction: column;
+        margin-bottom: 36px;
+      }
+
+      .github-link {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div>
+        <p class="eyebrow">Каталог расширений</p>
+        <h1><img class="title-logo" src="assets/logo.svg" alt="" width="68" height="68"><span id="title">Lampa Mods</span></h1>
+      </div>
+      <a class="github-link" id="repository" href="https://github.com/lampamods/lampamods.github.io" target="_blank" rel="noreferrer">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" fill="#fff">
+          <path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/>
+        </svg>
+        GitHub
+      </a>
+    </header>
+
+    <section aria-labelledby="plugins-title">
+      <h2 class="section-title" id="plugins-title">Плагины</h2>
+      <div class="plugins" id="plugins"></div>
+      <p class="status" id="status" role="status">Загрузка…</p>
+    </section>
+  </main>
+
+  <script>
+    var container = document.getElementById('plugins');
+    var statusElement = document.getElementById('status');
+
+    function createCopyButton(label, icon, accessibleLabel) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy-button';
+      button.setAttribute('aria-label', accessibleLabel);
+      button.innerHTML = '<span class="button-content"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg><span></span></span>' +
+        '<svg class="check-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>';
+      button.querySelector('.button-content span').textContent = label;
+      return button;
+    }
+
+    function copyText(text, button) {
+      function copied() {
+        var original = button.dataset.copyLabel || button.getAttribute('aria-label');
+        button.dataset.copyLabel = original;
+        window.clearTimeout(button.copyTimer);
+        button.classList.add('is-copied');
+        button.setAttribute('aria-label', 'Скопировано');
+        statusElement.hidden = true;
+        button.copyTimer = window.setTimeout(function () {
+          button.classList.remove('is-copied');
+          button.setAttribute('aria-label', original);
+        }, 1600);
+      }
+
+      function fallback() {
+        var input = document.createElement('textarea');
+        var focused = document.activeElement;
+        input.value = text;
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        document.body.appendChild(input);
+        input.select();
+        try {
+          if (!document.execCommand('copy')) throw new Error('Copy failed');
+          copied();
+        } catch (error) {
+          statusElement.textContent = 'Не удалось скопировать. Попробуйте ещё раз.';
+          statusElement.className = 'status error';
+          statusElement.hidden = false;
+        } finally {
+          input.remove();
+          if (focused) focused.focus();
+        }
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).then(copied, fallback);
+      } else {
+        return Promise.resolve(fallback());
+      }
+    }
+
+    function renderPlugin(plugin, baseUrl) {
+      var url = plugin.url || new URL(plugin.file, baseUrl).href;
+      var card = document.createElement('article');
+      card.className = 'plugin';
+
+      var name = document.createElement('h2');
+      name.textContent = plugin.name;
+
+      var description = document.createElement('p');
+      description.textContent = plugin.description;
+
+      var actions = document.createElement('div');
+      actions.className = 'actions';
+
+      var copyButton = createCopyButton('Ссылка', '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>', 'Копировать ссылку');
+      copyButton.addEventListener('click', function () {
+        copyText(url, copyButton);
+      });
+
+      var lampacAction = document.createElement('div');
+      lampacAction.className = 'lampac-action';
+      var lampacButton = createCopyButton('Lampac', '<path d="M8 3H6v6l-3 3 3 3v6h2M16 3h2v6l3 3-3 3v6h-2"/>', 'Копировать JSON для Lampac');
+      lampacButton.classList.add('lampac-button');
+      lampacButton.addEventListener('click', function (event) {
+        lampacAction.classList.add('tooltip-dismissed');
+        var json = JSON.stringify({ url: url, status: 1 }, null, 2)
+          .split('\n').map(function (line) { return '      ' + line; }).join('\n');
+        copyText(json, lampacButton).then(function () {
+          lampacAction.classList.add('tooltip-dismissed');
+          if (event.detail > 0 && document.activeElement === lampacButton) lampacButton.blur();
+        });
+      });
+
+      var tooltip = document.createElement('div');
+      tooltip.className = 'lampac-tooltip';
+      tooltip.id = 'lampac-help-' + container.childElementCount;
+      tooltip.innerHTML = '<div class="lampac-tooltip-content">Скопировать JSON плагина для <code>init.conf</code> проекта <a href="https://github.com/lampac-nextgen/lampac" target="_blank" rel="noreferrer">Lampac</a>. Вставьте объект в массив <code>LampaWeb.customPlugins</code>.</div>';
+      lampacButton.setAttribute('aria-describedby', tooltip.id);
+      lampacAction.append(lampacButton, tooltip);
+      lampacAction.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          lampacButton.focus();
+          lampacAction.classList.add('tooltip-dismissed');
+        }
+      });
+      ['mouseenter', 'focusin'].forEach(function (eventName) {
+        lampacAction.addEventListener(eventName, function () {
+          lampacAction.classList.remove('tooltip-dismissed');
+        });
+      });
+
+      var codeLink = document.createElement('a');
+      codeLink.className = 'code-link';
+      codeLink.href = url;
+      codeLink.target = '_blank';
+      codeLink.rel = 'noreferrer';
+      codeLink.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="2" fill="#f7df1e"/><text x="20" y="19" text-anchor="end" fill="#17130a" font-family="Arial, sans-serif" font-size="13" font-weight="700">JS</text></svg><span>Код</span>';
+
+      actions.append(copyButton, lampacAction, codeLink);
+      card.append(name, description, actions);
+      container.appendChild(card);
+    }
+
+    fetch('./plugins.json', { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Не удалось загрузить каталог');
+        return response.json();
+      })
+      .then(function (catalog) {
+        document.title = catalog.title;
+        document.getElementById('title').textContent = catalog.title;
+        document.getElementById('repository').href = catalog.repository;
+        catalog.plugins.forEach(function (plugin) {
+          renderPlugin(plugin, catalog.baseUrl);
+        });
+        statusElement.hidden = true;
+      })
+      .catch(function (error) {
+        statusElement.className = 'status error';
+        statusElement.textContent = error.message;
+      });
+  </script>
+</body>
+</html>

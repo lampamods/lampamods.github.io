@@ -11,6 +11,11 @@
       "name": "HistoryShortcut",
       "file": "HistoryShortcut.js",
       "description": "Открывает историю просмотров кнопкой в шапке"
+    },
+    {
+      "name": "KeepPiP",
+      "file": "KeepPiP.js",
+      "description": "Сохраняет режим «картинка в картинке» при переходе к следующей серии"
     }
   ]
 }

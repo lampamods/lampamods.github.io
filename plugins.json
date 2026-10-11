@@ -10,7 +10,9 @@
     {
       "name": "HistoryShortcut",
       "file": "HistoryShortcut.js",
-      "description": "Открывает историю просмотров кнопкой в шапке"
+      "description": "Открывает историю просмотров кнопкой в шапке",
+      "deprecated": true,
+      "replacement": "HeaderActions"
     },
     {
       "name": "HeaderActions",

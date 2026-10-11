@@ -120,6 +120,7 @@
       border-radius: 20px;
       background: var(--surface);
       flex-direction: column;
+      scroll-margin-block: 24px;
       transition: background 0.2s ease;
     }
 
@@ -138,10 +139,38 @@
       letter-spacing: -0.02em;
     }
 
+    .plugin-heading {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .plugin-badge {
+      padding: 4px 9px;
+      border: 1px solid rgba(243, 201, 79, 0.3);
+      border-radius: 8px;
+      background: rgba(243, 201, 79, 0.1);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
     .plugin p {
       margin: 10px 0 16px;
       color: var(--muted);
       line-height: 1.55;
+    }
+
+    .plugin .plugin-deprecation {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .plugin-deprecation a {
+      color: inherit;
+      text-underline-offset: 3px;
     }
 
     .actions {
@@ -393,13 +422,45 @@
       }
     }
 
+    function highlightPlugin(card) {
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      card.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+      card.focus({ preventScroll: true });
+
+      if (card.highlightAnimation) card.highlightAnimation.cancel();
+
+      var resting = { transform: 'scale(1)', borderColor: 'rgba(255, 255, 255, 0.09)', boxShadow: '0 0 0 rgba(243, 201, 79, 0)' };
+      var highlighted = { transform: reducedMotion ? 'scale(1)' : 'scale(1.025)', borderColor: '#f3c94f', boxShadow: '0 0 24px rgba(243, 201, 79, 0.2)' };
+
+      card.highlightAnimation = card.animate([resting, highlighted, resting], {
+        duration: 1000,
+        iterations: 1,
+        easing: 'ease-in-out',
+        delay: reducedMotion ? 0 : 250
+      });
+    }
+
     function renderPlugin(plugin) {
       var url = new URL(plugin.file || plugin.url, window.location.href).href;
       var card = document.createElement('article');
       card.className = 'plugin';
+      card.id = 'plugin-' + encodeURIComponent(plugin.name);
+      card.setAttribute('tabindex', '-1');
 
       var name = document.createElement('h2');
       name.textContent = plugin.name;
+
+      var heading = document.createElement('div');
+      heading.className = 'plugin-heading';
+      heading.appendChild(name);
+
+      if (plugin.deprecated) {
+        var badge = document.createElement('span');
+        badge.className = 'plugin-badge';
+        badge.textContent = 'Устарел';
+        heading.appendChild(badge);
+      }
 
       var description = document.createElement('p');
       description.textContent = plugin.description;
@@ -452,7 +513,31 @@
       codeLink.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="2" fill="#f7df1e"/><text x="20" y="19" text-anchor="end" fill="#17130a" font-family="Arial, sans-serif" font-size="13" font-weight="700">JS</text></svg><span>Код</span>';
 
       actions.append(copyButton, lampacAction, codeLink);
-      card.append(name, description, actions);
+      card.append(heading, description);
+
+      if (plugin.deprecated && plugin.replacement) {
+        var notice = document.createElement('p');
+        notice.className = 'plugin-deprecation';
+        notice.textContent = 'Рекомендуем использовать ';
+
+        var replacementLink = document.createElement('a');
+        replacementLink.href = '#plugin-' + encodeURIComponent(plugin.replacement);
+        replacementLink.textContent = plugin.replacement;
+        replacementLink.addEventListener('click', function (event) {
+          if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+
+          var target = document.getElementById('plugin-' + encodeURIComponent(plugin.replacement));
+          if (!target) return;
+
+          event.preventDefault();
+          window.history.replaceState(null, '', replacementLink.getAttribute('href'));
+          highlightPlugin(target);
+        });
+        notice.appendChild(replacementLink);
+        card.appendChild(notice);
+      }
+
+      card.appendChild(actions);
       container.appendChild(card);
     }
 

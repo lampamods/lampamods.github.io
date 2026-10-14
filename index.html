@@ -535,6 +535,21 @@
         });
         notice.appendChild(replacementLink);
         card.appendChild(notice);
+      } else if (plugin.deprecated && plugin.deprecationReason) {
+        var deprecationNotice = document.createElement('p');
+        deprecationNotice.className = 'plugin-deprecation';
+        deprecationNotice.textContent = plugin.deprecationReason;
+
+        if (plugin.deprecationUrl) {
+          var deprecationLink = document.createElement('a');
+          deprecationLink.href = plugin.deprecationUrl;
+          deprecationLink.target = '_blank';
+          deprecationLink.rel = 'noreferrer';
+          deprecationLink.textContent = 'Подробнее';
+          deprecationNotice.append(' ', deprecationLink);
+        }
+
+        card.appendChild(deprecationNotice);
       }
 
       card.appendChild(actions);

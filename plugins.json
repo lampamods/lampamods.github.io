@@ -22,7 +22,10 @@
     {
       "name": "KeepPiP",
       "file": "KeepPiP.js",
-      "description": "Сохраняет режим «картинка в картинке» при переходе к следующей серии"
+      "description": "Сохраняет режим «картинка в картинке» при переходе к следующей серии",
+      "deprecated": true,
+      "deprecationReason": "С 3 октября 2026 года эта функция встроена в Lampa по умолчанию. В обновлённой Lampa плагин больше не нужен.",
+      "deprecationUrl": "https://github.com/yumata/lampa-source/commit/b4a13b6af7fe2f3bbbcb91f4eb434ab3378f8d5d"
     }
   ]
 }

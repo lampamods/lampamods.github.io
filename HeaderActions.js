@@ -71,6 +71,18 @@
         ru: 'История просмотров',
         en: 'Watch history'
       },
+      headeractions_notice: {
+        ru: 'Уведомления',
+        en: 'Notifications'
+      },
+      headeractions_search: {
+        ru: 'Поиск',
+        en: 'Search'
+      },
+      headeractions_settings: {
+        ru: 'Настройки',
+        en: 'Settings'
+      },
       headeractions_show_button: {
         ru: 'Показывать кнопку в шапке',
         en: 'Show button in header'
@@ -121,7 +133,11 @@
       });
     });
 
-    actions.forEach(function (action) {
+    actions.concat([
+      { name: 'notice', button: Lampa.Head.render().find('.notice--icon') },
+      { name: 'search', button: Lampa.Head.render().find('.open--search') },
+      { name: 'settings', button: Lampa.Head.render().find('.open--settings') }
+    ]).forEach(function (action) {
       var key = 'headeractions_' + action.name;
 
       function update_button() {

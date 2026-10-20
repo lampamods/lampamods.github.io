@@ -149,7 +149,7 @@
         param: {
           name: key,
           type: 'trigger',
-          "default": true
+          "default": action.name != 'notice'
         },
         field: {
           name: Lampa.Lang.translate(key),
